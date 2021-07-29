@@ -1,12 +1,12 @@
 import { Form, Input, Button, Checkbox } from "antd";
 import axios from 'axios'
-import { useContext, useState } from "react";
+import { useContext,  } from "react";
 import "antd/dist/antd.css";
 import UserContext from "../../Context/UserContext";
 
 const Login = () => {
 
-  const { currentUser, setCurrentUser } = useContext(UserContext);
+  const {  setCurrentUser } = useContext(UserContext);
   const onFinish = (values) => {
     console.log("Success:", values);
     axios({
