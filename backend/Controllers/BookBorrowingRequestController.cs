@@ -39,6 +39,13 @@ namespace Library.Controllers
 
             return result;
         }
+        [HttpGet("/api/BorrowRequests/{UserId}")]
+        public IEnumerable<BookBorrowingRequest> GetUserId(int UserId)
+        {
+            var result = _Service.GetRequests().Where(br=>br.UserId == UserId);
+
+            return result;
+        }
         
        
         [HttpDelete("/api/BorrowRequest/{id}")]
@@ -67,11 +74,11 @@ namespace Library.Controllers
         {
             if (!ModelState.IsValid) return BadRequest("Co loi xay ra!");
 
-            string token = Request.Headers["Token"];
+            int token = int.Parse(Request.Headers["Token"]);
 
-            if (token == null) return Unauthorized();
+           
 
-            var user = _UserService.GetUsers().SingleOrDefault(u => u.Id == int.Parse(token));
+            var user = _UserService.GetUsers().SingleOrDefault(u => u.Id == token);
 
             if (user == null) return Unauthorized();
 
@@ -82,7 +89,7 @@ namespace Library.Controllers
             if (entity != null)
             {
                 entity.Status = (Status)1;
-                db.SaveChanges();
+                _Service.Edit(entity);
                 return Ok(entity);
             }
 
@@ -93,11 +100,11 @@ namespace Library.Controllers
         {
             if (!ModelState.IsValid) return BadRequest("Co loi xay ra!");
 
-            string token = Request.Headers["Token"];
+            int token = int.Parse(Request.Headers["Token"]);
 
-            if (token == null) return Unauthorized();
+            
 
-            var user = _UserService.GetUsers().SingleOrDefault(u => u.Id == int.Parse(token));
+            var user = _UserService.GetUsers().SingleOrDefault(u => u.Id == token);
 
             if (user == null) return Unauthorized();
 
@@ -106,7 +113,10 @@ namespace Library.Controllers
             var entity = _Service.GetRequest(borrowRequestId);
 
             if (entity != null)
-            {
+            {   
+                // var result = new BookBorrowingRequest{
+
+                // };
                 entity.Status = (Status)2;
                 db.SaveChanges();
                 return Ok(entity);
@@ -126,6 +136,9 @@ namespace Library.Controllers
                     borrowRequest.BorrowDate = DateTime.Now;
                     borrowRequest.Status = (Status)0;
                     borrowRequest.UserId = userId;
+                    borrowRequest.User = null;
+                    borrowRequest.BorrowRequestDetails= null;
+
                     _Service.Add(borrowRequest);
                     return Ok(borrowRequest);
                 }

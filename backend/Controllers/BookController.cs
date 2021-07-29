@@ -63,7 +63,7 @@ namespace Library.Controllers
             // }
 
             // return BadRequest();
-            int token = int.Parse(Request.Headers["Token"]);
+            int token = 1;//int.Parse(Request.Headers["Token"]);
 
             var user = _UserService.GetUsers().SingleOrDefault(u => u.Id == token);
             if (user == null)

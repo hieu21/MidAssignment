@@ -29,17 +29,17 @@ namespace backend
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {   
-             services.AddCors(options =>
-            {
-                options.AddPolicy(name: MyAllowSpecificOrigins,
-                                  builder =>
-                                  {
-                                      builder.WithOrigins("http://localhost:3000")
-                                                          .AllowAnyHeader()
-                                                          .AllowAnyMethod();
-                                  });
-            });
+        {
+            services.AddCors(options =>
+           {
+               options.AddPolicy(name: MyAllowSpecificOrigins,
+                                 builder =>
+                                 {
+                                     builder.WithOrigins("http://localhost:3000")
+                                                         .AllowAnyHeader()
+                                                         .AllowAnyMethod();
+                                 });
+           });
 
 
             services.AddControllers();
@@ -48,10 +48,14 @@ namespace backend
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "backend", Version = "v1" });
             });
             services.AddDbContext<BackendContext>(options => options.UseSqlServer(Configuration.GetConnectionString("MvcMovieContext")));
-            services.AddScoped<IUserService,UserService>();
-            services.AddScoped<IBookService,BookService>();
-            services.AddScoped<ICategoryService,CategoryService>();
-            services.AddScoped<IBookBorrowingRequestService,BookBorrowingRequestService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IBookService, BookService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IBookBorrowingRequestService, BookBorrowingRequestService>();
+            services.AddControllersWithViews()
+            .AddNewtonsoftJson(options =>
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+        );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
